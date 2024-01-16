@@ -23,21 +23,29 @@ template <> struct operators<qty_t, qty_t> {
   using add = qty_t;
   using subtract = qty_t;
 };
+
+template <> struct operators<qty_t> {
+  using pre_dec = qty_t;
+  using pre_inc = qty_t;
+  // using post_inc = qty_t;
+};
+
 } // namespace strong_type
 
 using notional = strong_type::not_t;
 using price = strong_type::px_t;
 using quantity = strong_type::qty_t;
 
-notional f(price px, quantity qty) { return -px * 2.0 * qty; }
-double g(double px, double qty) { return -px * 2.0 * qty; }
+notional f(price px, quantity qty) { return -px * 2.0 * ++qty; }
+double g(double px, double qty) { return -px * 2.0 * ++qty; }
 
 int main(int argc, char **argv) {
   price px{100.0};
   quantity qty{2.0};
 
-  auto result = f(px, qty);
-  auto result2 = g(px.get(), qty.get());
+  auto result = f(px, --qty);
+  ++qty;
+  auto result2 = g(px.get(), --qty.value);
 
   std::cout << result.get() << " vs " << result2 << std::endl;
 }

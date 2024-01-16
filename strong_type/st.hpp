@@ -34,9 +34,8 @@ template <class In1, class In2 = void> struct operators {
 #define DEFINE_UNARY_OPERATOR(OP, OP_NAME)                                     \
   template <class In1>                                                         \
   requires has_operator<typename operators<In1>::OP_NAME>                      \
-  constexpr auto operator OP(const In1 &rhs)                                   \
-      ->typename operators<In1>::OP_NAME {                                     \
-    return typename operators<In1>::OP_NAME(OP rhs.get());                     \
+  constexpr auto operator OP(In1 &rhs)->typename operators<In1>::OP_NAME {     \
+    return typename operators<In1>::OP_NAME(OP rhs.value);                     \
   }
 
 #define X(OP, OP_NAME) DEFINE_UNARY_OPERATOR(OP, OP_NAME)
